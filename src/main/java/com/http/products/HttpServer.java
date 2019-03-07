@@ -1,5 +1,7 @@
 package com.http.products;
 
+import com.common.utils.Util;
+
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
@@ -13,16 +15,19 @@ public class HttpServer extends AbstractVerticle {
 
 	@Override
 	public void start(Future<Void> startFuture) throws Exception {
-		System.out.println("start HttpServer verticle...");
-		
-		Router router = Router.router(vertx);
-		Routes.buildRoutes(router,vertx);
-		initHttpServer(router, startFuture);
-		
-		
-		vertx.deployVerticle(new ProductsService());
-	}
 
+		System.out.println("start HttpServer verticle..." + Thread.currentThread().getName());
+
+		Router router = Router.router(vertx);
+		Routes.buildRoutes(router, vertx);
+		initHttpServer(router, startFuture);
+
+		DeploymentOptions prdctSrvcDplymntOptns = new DeploymentOptions();
+		prdctSrvcDplymntOptns.setWorker(true);
+		prdctSrvcDplymntOptns.setWorkerPoolName(Thread.currentThread().getName() + "-prdctSrvcWrkPoolHndlr");
+		prdctSrvcDplymntOptns.setWorkerPoolSize(5);
+		vertx.deployVerticle(new ProductsService(), prdctSrvcDplymntOptns);
+	}
 
 	private void initHttpServer(Router router, Future<Void> startFuture) {
 		int port = 9078;
