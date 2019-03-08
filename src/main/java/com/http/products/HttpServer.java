@@ -1,6 +1,5 @@
 package com.http.products;
 
-import com.common.utils.Util;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.DeploymentOptions;
@@ -15,7 +14,6 @@ public class HttpServer extends AbstractVerticle {
 
 	@Override
 	public void start(Future<Void> startFuture) throws Exception {
-
 		System.out.println("start HttpServer verticle..." + Thread.currentThread().getName());
 
 		Router router = Router.router(vertx);
